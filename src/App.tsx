@@ -8,6 +8,9 @@ import { Signup } from './pages/Signup';
 import { Dashboard } from './pages/Dashboard';
 import { Accounts } from './pages/Accounts';
 import { Transactions } from './pages/Transactions';
+import { Debts } from './pages/Debts';
+import { DebtDetail } from './pages/DebtDetail';
+import { Budgets } from './pages/Budgets';
 
 const queryClient = new QueryClient();
 
@@ -30,6 +33,9 @@ export default function App() {
               <Route index element={<Dashboard />} />
               <Route path="transactions" element={<Transactions />} />
               <Route path="accounts" element={<Accounts />} />
+              <Route path="debts" element={<Debts />} />
+              <Route path="debts/:id" element={<DebtDetail />} />
+              <Route path="budgets" element={<Budgets />} />
             </Route>
           </Routes>
         </BrowserRouter>

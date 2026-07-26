@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useAccounts } from '../hooks/useAccounts';
 import { useTransactions } from '../hooks/useTransactions';
 import { StatCard } from '../components/StatCard';
+import { useDebts } from '../hooks/useDebts';
 import { formatCurrency, formatDate, isLiabilityAccount } from '../lib/format';
 
 function startOfMonthISO(): string {
@@ -37,6 +38,15 @@ export function Dashboard() {
     }
     return { monthlyIncome: income, monthlyExpense: expense };
   }, [monthTransactions]);
+
+  const { data: debts } = useDebts();
+
+  const upcomingDebts = useMemo(() => {
+    return (debts ?? [])
+      .filter((d) => d.status === 'active' && d.due_date)
+      .sort((a, b) => (a.due_date! < b.due_date! ? -1 : 1))
+      .slice(0, 5);
+  }, [debts]);
 
   const netCashFlow = monthlyIncome - monthlyExpense;
   const savingsRate = monthlyIncome > 0 ? Math.round((netCashFlow / monthlyIncome) * 100) : 0;
@@ -88,16 +98,38 @@ export function Dashboard() {
               <p className="text-xs text-neutral-500">{formatDate(tx.occurred_at)}</p>
             </div>
             <p
-              className={`text-sm font-semibold ${
-                tx.type === 'income'
-                  ? 'text-emerald-400'
-                  : tx.type === 'expense'
+              className={`text-sm font-semibold ${tx.type === 'income'
+                ? 'text-emerald-400'
+                : tx.type === 'expense'
                   ? 'text-red-400'
                   : 'text-neutral-100'
-              }`}
+                }`}
             >
               {tx.type === 'expense' ? '-' : tx.type === 'income' ? '+' : ''}
               {formatCurrency(tx.amount)}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-6 rounded-2xl border border-neutral-800">
+        <div className="border-b border-neutral-800 px-5 py-4">
+          <h2 className="text-sm font-semibold text-neutral-100">Upcoming Installments</h2>
+        </div>
+        {upcomingDebts.length === 0 && (
+          <p className="p-5 text-sm text-neutral-500">Nothing due soon.</p>
+        )}
+        {upcomingDebts.map((debt) => (
+          <div
+            key={debt.id}
+            className="flex items-center justify-between border-b border-neutral-800 px-5 py-3 last:border-b-0"
+          >
+            <div>
+              <p className="text-sm font-medium text-neutral-100">{debt.person_name}</p>
+              <p className="text-xs text-neutral-500">Due {formatDate(debt.due_date!)}</p>
+            </div>
+            <p className="text-sm font-semibold text-neutral-100">
+              {formatCurrency(debt.monthly_installment ?? debt.current_balance)}
             </p>
           </div>
         ))}

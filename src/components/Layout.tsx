@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const NAV_ITEMS = [
@@ -21,10 +21,10 @@ export function Layout() {
   return (
     <div className="flex min-h-screen bg-neutral-950 text-neutral-100">
       <aside className="w-60 shrink-0 border-r border-neutral-800 p-6 flex flex-col">
-        <div className="mb-8">
-          <h1 className="text-xl font-semibold tracking-tight">Kite</h1>
+        <Link to="/" className="mb-8 block">
+          <h1 className="text-xl font-semibold tracking-tight hover:text-indigo-400">Kite</h1>
           <p className="text-xs text-neutral-500">Financial freedom and growth</p>
-        </div>
+        </Link>
 
         <nav className="flex-1 space-y-1">
           {NAV_ITEMS.map((item) => (
