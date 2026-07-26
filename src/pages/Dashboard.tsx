@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useAccounts } from '../hooks/useAccounts';
 import { useTransactions } from '../hooks/useTransactions';
 import { StatCard } from '../components/StatCard';
-import { formatCurrency, formatDate } from '../lib/format';
+import { formatCurrency, formatDate, isLiabilityAccount } from '../lib/format';
 
 function startOfMonthISO(): string {
   const d = new Date();
@@ -14,10 +14,19 @@ export function Dashboard() {
   const { data: monthTransactions } = useTransactions({ startDate: startOfMonthISO() });
   const { data: recentTransactions } = useTransactions();
 
-  const totalBalance = useMemo(
-    () => accounts?.reduce((sum, a) => sum + Number(a.current_balance), 0) ?? 0,
-    [accounts]
-  );
+  const { totalAssets, totalLiabilities, netWorth } = useMemo(() => {
+    let assets = 0;
+    let liabilities = 0;
+    for (const acc of accounts ?? []) {
+      if (isLiabilityAccount(acc.type)) {
+        // liability balances are stored negative (money owed); track as a positive owed amount
+        liabilities += Math.max(0, -Number(acc.current_balance));
+      } else {
+        assets += Number(acc.current_balance);
+      }
+    }
+    return { totalAssets: assets, totalLiabilities: liabilities, netWorth: assets - liabilities };
+  }, [accounts]);
 
   const { monthlyIncome, monthlyExpense } = useMemo(() => {
     let income = 0;
@@ -39,8 +48,17 @@ export function Dashboard() {
         <p className="text-sm text-neutral-500">Your financial snapshot for this month</p>
       </div>
 
+      <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <StatCard label="Total Assets" value={formatCurrency(totalAssets)} accent="green" />
+        <StatCard label="Total Liabilities" value={formatCurrency(totalLiabilities)} accent="red" />
+        <StatCard
+          label="Net Worth"
+          value={formatCurrency(netWorth)}
+          accent={netWorth >= 0 ? 'green' : 'red'}
+        />
+      </div>
+
       <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Current Balance" value={formatCurrency(totalBalance)} />
         <StatCard label="Monthly Income" value={formatCurrency(monthlyIncome)} accent="green" />
         <StatCard label="Monthly Expense" value={formatCurrency(monthlyExpense)} accent="red" />
         <StatCard
@@ -49,7 +67,6 @@ export function Dashboard() {
           accent={netCashFlow >= 0 ? 'green' : 'red'}
         />
         <StatCard label="Savings Rate" value={`${savingsRate}%`} />
-        <StatCard label="Accounts" value={String(accounts?.length ?? 0)} />
       </div>
 
       <div className="rounded-2xl border border-neutral-800">
