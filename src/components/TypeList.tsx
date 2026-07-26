@@ -41,18 +41,18 @@ export function TypeList<T extends Item>({
 
   return (
     <div className="space-y-3">
-      <form onSubmit={handleAdd} className="flex gap-2">
+      <form onSubmit={handleAdd} className="flex flex-col sm:flex-row gap-2">
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="New name"
-          className="flex-1 rounded-lg border border-neutral-700 bg-transparent px-3 py-2 text-sm text-neutral-100 placeholder:text-neutral-500 outline-none focus:ring-2 focus:ring-indigo-500"
+          className="flex-1 rounded-lg border border-neutral-700 bg-transparent px-3 py-2.5 text-sm text-neutral-100 placeholder:text-neutral-500 outline-none focus:ring-2 focus:ring-indigo-500"
         />
         {kindOptions && (
           <select
             value={kind}
             onChange={(e) => setKind(e.target.value)}
-            className="rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm text-neutral-100 outline-none focus:ring-2 focus:ring-indigo-500"
+            className="rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2.5 text-sm text-neutral-100 outline-none focus:ring-2 focus:ring-indigo-500 sm:w-32"
           >
             {kindOptions.map((k) => (
               <option key={k.value} value={k.value}>{k.label}</option>
@@ -62,27 +62,27 @@ export function TypeList<T extends Item>({
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
+          className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50 transition-colors sm:w-auto"
         >
           Add
         </button>
       </form>
       {error && <p className="text-sm text-red-400">{error}</p>}
 
-      <div className="divide-y divide-neutral-800 rounded-lg border border-neutral-800">
+      <div className="divide-y divide-neutral-800 rounded-lg border border-neutral-800 overflow-hidden">
         {items.map((item) => (
-          <div key={item.id} className="flex items-center justify-between px-4 py-2.5">
-            <span className="text-sm text-neutral-100">{item.name}</span>
+          <div key={item.id} className="flex items-center justify-between px-4 py-3">
+            <span className="text-sm text-neutral-100 truncate">{item.name}</span>
             {item.user_id ? (
               <button
                 disabled={isDeleting}
                 onClick={() => onDelete(item.id)}
-                className="text-xs text-neutral-500 hover:text-red-400"
+                className="text-xs text-neutral-500 hover:text-red-400 whitespace-nowrap flex-shrink-0 ml-2"
               >
                 Delete
               </button>
             ) : (
-              <span className="text-xs text-neutral-600">default</span>
+              <span className="text-xs text-neutral-600 whitespace-nowrap flex-shrink-0 ml-2">default</span>
             )}
           </div>
         ))}

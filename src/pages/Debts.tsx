@@ -25,21 +25,21 @@ export function Debts() {
   const filtered = debts?.filter((d) => d.direction === tab) ?? [];
 
   return (
-    <div className="p-8">
-      <div className="mb-6 flex items-center justify-between">
+    <div className="p-4 sm:p-6 lg:p-8">
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">Debts</h1>
+          <h1 className="text-2xl sm:text-3xl font-semibold">Debts</h1>
           <p className="text-sm text-neutral-500">Track money you owe and money owed to you</p>
         </div>
         <button
           onClick={() => setModalOpen(true)}
-          className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500"
+          className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-500 transition-colors w-full sm:w-auto"
         >
           + New debt
         </button>
       </div>
 
-      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="mb-6 grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2">
         <StatCard label="Total I Owe" value={formatCurrency(totalIOwe)} accent="red" />
         <StatCard label="Total Owed To Me" value={formatCurrency(totalOwedToMe)} accent="green" />
       </div>
@@ -47,16 +47,16 @@ export function Debts() {
       <div className="mb-4 flex gap-2">
         <button
           onClick={() => setTab('owed_by_me')}
-          className={`rounded-lg px-4 py-2 text-sm font-medium ${
-            tab === 'owed_by_me' ? 'bg-indigo-600 text-white' : 'border border-neutral-700 text-neutral-400'
+          className={`rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${
+            tab === 'owed_by_me' ? 'bg-indigo-600 text-white' : 'border border-neutral-700 text-neutral-400 hover:bg-neutral-900'
           }`}
         >
           I Owe
         </button>
         <button
           onClick={() => setTab('owed_to_me')}
-          className={`rounded-lg px-4 py-2 text-sm font-medium ${
-            tab === 'owed_to_me' ? 'bg-indigo-600 text-white' : 'border border-neutral-700 text-neutral-400'
+          className={`rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${
+            tab === 'owed_to_me' ? 'bg-indigo-600 text-white' : 'border border-neutral-700 text-neutral-400 hover:bg-neutral-900'
           }`}
         >
           Owed To Me
@@ -67,7 +67,7 @@ export function Debts() {
       {error && <p className="text-red-400">Failed to load debts.</p>}
 
       {filtered.length === 0 && !isLoading && (
-        <div className="rounded-2xl border border-dashed border-neutral-800 p-12 text-center">
+        <div className="rounded-2xl border border-dashed border-neutral-800 p-8 sm:p-12 text-center">
           <p className="text-neutral-500">Nothing here yet.</p>
         </div>
       )}
@@ -77,11 +77,11 @@ export function Debts() {
           <Link
             key={debt.id}
             to={`/debts/${debt.id}`}
-            className="rounded-2xl border border-neutral-800 p-5 hover:border-neutral-700"
+            className="rounded-2xl border border-neutral-800 p-5 hover:border-neutral-700 hover:bg-neutral-900/30 transition-all"
           >
-            <div className="mb-2 flex items-center justify-between">
+            <div className="mb-2 flex items-center justify-between gap-2 flex-wrap">
               <span className="rounded-full bg-neutral-800 px-2 py-0.5 text-xs font-medium text-neutral-300">
-                {debt.debt_type.replace('_', ' ')}
+                {debt.debt_type?.name || 'Debt'}
               </span>
               {debt.status === 'completed' && (
                 <span className="rounded-full bg-emerald-900 px-2 py-0.5 text-xs font-medium text-emerald-300">
@@ -96,7 +96,7 @@ export function Debts() {
             </div>
 
             <p className="font-medium text-neutral-100">{debt.person_name}</p>
-            <p className="mt-1 text-xl font-semibold">{formatCurrency(debt.current_balance)}</p>
+            <p className="mt-2 text-xl sm:text-2xl font-semibold">{formatCurrency(debt.current_balance)}</p>
             <p className="text-xs text-neutral-500 mb-3">of {formatCurrency(debt.original_amount)} total</p>
 
             <DebtProgressBar original={debt.original_amount} remaining={debt.current_balance} />

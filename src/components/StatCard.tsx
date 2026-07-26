@@ -11,9 +11,9 @@ export function StatCard({
     accent === 'green' ? 'text-emerald-400' : accent === 'red' ? 'text-red-400' : 'text-neutral-100';
 
   return (
-    <div className="rounded-2xl border border-neutral-800 p-5">
+    <div className="rounded-2xl border border-neutral-800 p-4 sm:p-5 hover:border-neutral-700 transition-colors">
       <p className="text-xs font-medium text-neutral-500">{label}</p>
-      <p className={`mt-2 text-2xl font-semibold ${accentClass}`}>{value}</p>
+      <p className={`mt-2 text-xl sm:text-2xl font-semibold ${accentClass}`}>{value}</p>
     </div>
   );
 }
