@@ -76,22 +76,22 @@ export function Layout() {
 
       <main className="flex-1 w-full flex flex-col min-h-screen lg:ml-0">
         {/* Mobile Header */}
-        <div className="sticky top-0 z-40 border-b border-neutral-800 bg-neutral-950 px-4 py-3 flex items-center justify-between lg:hidden">
+        <div className="sticky top-0 z-40 border-b border-neutral-800 bg-gradient-to-r from-neutral-950 to-neutral-900 px-4 py-4 flex items-center justify-between lg:hidden shadow-lg">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 hover:bg-neutral-900 rounded-lg transition-colors"
+            className="p-2.5 hover:bg-neutral-800 active:bg-neutral-700 rounded-xl transition-all duration-200"
             aria-label="Toggle menu"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {mobileMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
               ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
               )}
             </svg>
           </button>
           <Link to="/" className="flex-1 text-center">
-            <h1 className="text-lg font-semibold">Kite</h1>
+            <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-400 to-indigo-600 bg-clip-text text-transparent">Kite</h1>
           </Link>
           <div className="w-10" /> {/* Spacer for alignment */}
         </div>

@@ -52,13 +52,13 @@ export function Dashboard() {
   const savingsRate = monthlyIncome > 0 ? Math.round((netCashFlow / monthlyIncome) * 100) : 0;
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
-      <div className="mb-6 lg:mb-8">
-        <h1 className="text-2xl sm:text-3xl font-semibold">Dashboard</h1>
-        <p className="text-sm text-neutral-500">Your financial snapshot for this month</p>
+    <div className="p-3 sm:p-6 lg:p-8 bg-gradient-to-b from-neutral-950 to-neutral-900/50">
+      <div className="mb-8 lg:mb-10">
+        <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-400 to-indigo-600 bg-clip-text text-transparent">Dashboard</h1>
+        <p className="text-sm text-neutral-400 mt-2 font-medium">Your financial snapshot for this month</p>
       </div>
 
-      <div className="mb-4 grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mb-6 grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3">
         <StatCard label="Total Assets" value={formatCurrency(totalAssets)} accent="green" />
         <StatCard label="Total Liabilities" value={formatCurrency(totalLiabilities)} accent="red" />
         <StatCard
@@ -68,7 +68,7 @@ export function Dashboard() {
         />
       </div>
 
-      <div className="mb-6 lg:mb-8 grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mb-8 lg:mb-10 grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Monthly Income" value={formatCurrency(monthlyIncome)} accent="green" />
         <StatCard label="Monthly Expense" value={formatCurrency(monthlyExpense)} accent="red" />
         <StatCard
@@ -79,27 +79,28 @@ export function Dashboard() {
         <StatCard label="Savings Rate" value={`${savingsRate}%`} />
       </div>
 
-      <div className="rounded-2xl border border-neutral-800 overflow-hidden">
-        <div className="border-b border-neutral-800 px-4 sm:px-5 py-4">
-          <h2 className="text-sm font-semibold text-neutral-100">Recent Transactions</h2>
+      <div className="card">
+        <div className="border-b border-neutral-800 px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between">
+          <h2 className="text-sm sm:text-base font-bold text-neutral-100 uppercase tracking-wide">Recent Transactions</h2>
+          <span className="text-xs text-neutral-500 font-medium">{recentTransactions?.length ?? 0} total</span>
         </div>
         {recentTransactions && recentTransactions.length === 0 && (
-          <p className="p-4 sm:p-5 text-sm text-neutral-500">No transactions yet.</p>
+          <p className="p-6 text-sm text-neutral-400 text-center font-medium">No transactions yet. Start recording your spending!</p>
         )}
         <div className="divide-y divide-neutral-800">
           {recentTransactions?.slice(0, 8).map((tx) => (
             <div
               key={tx.id}
-              className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-4 sm:px-5 py-3"
+              className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-5 sm:px-6 py-4 hover:bg-neutral-800/30 transition-all duration-200"
             >
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-neutral-100 truncate">
+                <p className="text-sm sm:text-base font-semibold text-neutral-100 truncate">
                   {tx.merchant || tx.category?.name || 'Transaction'}
                 </p>
-                <p className="text-xs text-neutral-500 mt-1">{formatDate(tx.occurred_at)}</p>
+                <p className="text-xs text-neutral-500 mt-1 font-medium">{formatDate(tx.occurred_at)}</p>
               </div>
               <p
-                className={`text-sm font-semibold ${
+                className={`text-sm sm:text-base font-bold whitespace-nowrap ${
                   tx.type === 'income'
                     ? 'text-emerald-400'
                     : tx.type === 'expense'
@@ -107,7 +108,7 @@ export function Dashboard() {
                     : 'text-neutral-100'
                 }`}
               >
-                {tx.type === 'expense' ? '-' : tx.type === 'income' ? '+' : ''}
+                {tx.type === 'expense' ? '−' : tx.type === 'income' ? '+' : ''}
                 {formatCurrency(tx.amount)}
               </p>
             </div>
@@ -115,27 +116,30 @@ export function Dashboard() {
         </div>
       </div>
 
-      <div className="mt-6 rounded-2xl border border-neutral-800">
-        <div className="border-b border-neutral-800 px-5 py-4">
-          <h2 className="text-sm font-semibold text-neutral-100">Upcoming Installments</h2>
+      <div className="mt-8 card">
+        <div className="border-b border-neutral-800 px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between">
+          <h2 className="text-sm sm:text-base font-bold text-neutral-100 uppercase tracking-wide">Upcoming Installments</h2>
+          <span className="text-xs text-neutral-500 font-medium">{upcomingDebts.length} due</span>
         </div>
         {upcomingDebts.length === 0 && (
-          <p className="p-5 text-sm text-neutral-500">Nothing due soon.</p>
+          <p className="p-6 text-sm text-neutral-400 text-center font-medium">Nothing due soon. Great job!</p>
         )}
-        {upcomingDebts.map((debt) => (
-          <div
-            key={debt.id}
-            className="flex items-center justify-between border-b border-neutral-800 px-5 py-3 last:border-b-0"
-          >
-            <div>
-              <p className="text-sm font-medium text-neutral-100">{debt.person_name}</p>
-              <p className="text-xs text-neutral-500">Due {formatDate(debt.due_date!)}</p>
+        <div className="divide-y divide-neutral-800">
+          {upcomingDebts.map((debt) => (
+            <div
+              key={debt.id}
+              className="flex items-center justify-between px-5 sm:px-6 py-4 hover:bg-neutral-800/30 transition-all duration-200"
+            >
+              <div>
+                <p className="text-sm sm:text-base font-semibold text-neutral-100">{debt.person_name}</p>
+                <p className="text-xs text-neutral-500 mt-1 font-medium">Due {formatDate(debt.due_date!)}</p>
+              </div>
+              <p className="text-sm sm:text-base font-bold text-indigo-400 whitespace-nowrap">
+                {formatCurrency(debt.monthly_installment ?? debt.current_balance)}
+              </p>
             </div>
-            <p className="text-sm font-semibold text-neutral-100">
-              {formatCurrency(debt.monthly_installment ?? debt.current_balance)}
-            </p>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
