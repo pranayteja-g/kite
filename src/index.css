@@ -3,35 +3,72 @@
 html {
   color-scheme: dark;
   scroll-behavior: smooth;
+  font-size: 16px;
 }
 
 body {
   @apply bg-neutral-950 text-neutral-100;
 }
 
-/* Ensure form inputs have touch-friendly sizing on mobile */
+/* Mobile-first responsive typography */
+@media (max-width: 640px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+/* Touch-friendly sizing on mobile */
 @media (max-width: 640px) {
   input,
   select,
-  textarea,
+  textarea {
+    @apply min-h-[3rem] text-base;
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+  
   button {
     @apply min-h-[2.75rem];
   }
 }
 
-/* Smooth transitions for interactive elements */
+/* Smooth transitions and animations */
 button,
 a,
 input,
 select,
 textarea {
-  @apply transition-colors duration-200;
+  @apply transition-all duration-300;
 }
 
-/* Improve scrollbar appearance */
+/* Better card styling */
+.card {
+  @apply rounded-2xl border border-neutral-800 bg-neutral-900/50 backdrop-blur-sm;
+  @apply transition-all duration-300;
+}
+
+.card:hover {
+  @apply border-neutral-700 bg-neutral-900/80 shadow-lg;
+}
+
+/* Mobile-optimized modals */
+@media (max-width: 640px) {
+  .modal-content {
+    @apply rounded-t-3xl rounded-b-none;
+    max-height: 90vh;
+  }
+}
+
+/* Better focus states */
+input:focus,
+select:focus,
+textarea:focus {
+  @apply outline-none ring-2 ring-indigo-500 ring-offset-2 ring-offset-neutral-950;
+}
+
+/* Scrollbar styling */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -39,10 +76,16 @@ textarea {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(229, 231, 235, 0.3);
-  border-radius: 4px;
+  background: rgba(107, 114, 128, 0.5);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(229, 231, 235, 0.5);
+  background: rgba(107, 114, 128, 0.8);
+}
+
+/* Better text rendering */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
