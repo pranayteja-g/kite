@@ -27,7 +27,7 @@ export function useCreateDebtPayment() {
 export function useDeleteDebtPayment() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, debtId }: { id: string; debtId: string }) => deleteDebtPayment(id),
+    mutationFn: ({ id }: { id: string; debtId: string }) => deleteDebtPayment(id),
     onSuccess: (_data, variables) => {
       qc.invalidateQueries({ queryKey: ['debtPayments', variables.debtId] });
       qc.invalidateQueries({ queryKey: ['debts'] });

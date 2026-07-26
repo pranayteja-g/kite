@@ -18,9 +18,9 @@ export function ManageTypes() {
   const deleteCategory = useDeleteCategory();
 
   return (
-    <div className="p-8 space-y-10 max-w-2xl">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-8 sm:space-y-10 max-w-2xl">
       <div>
-        <h1 className="text-2xl font-semibold">Manage Types</h1>
+        <h1 className="text-2xl sm:text-3xl font-semibold">Manage Types</h1>
         <p className="text-sm text-neutral-500">Customize the account types, debt types, and categories you use.</p>
       </div>
 
@@ -63,7 +63,7 @@ export function ManageTypes() {
           onDelete={(id) => deleteCategory.mutate(id)}
           isDeleting={deleteCategory.isPending}
         />
-        <p className="mb-2 mt-4 text-xs text-neutral-500">Expense categories</p>
+        <p className="mb-2 mt-6 text-xs text-neutral-500">Expense categories</p>
         <TypeList
           items={(categories ?? []).filter((c) => c.kind === 'expense')}
           onAdd={async (name) => {

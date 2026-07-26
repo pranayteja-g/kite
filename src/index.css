@@ -2,8 +2,47 @@
 
 html {
   color-scheme: dark;
+  scroll-behavior: smooth;
 }
 
 body {
   @apply bg-neutral-950 text-neutral-100;
+}
+
+/* Ensure form inputs have touch-friendly sizing on mobile */
+@media (max-width: 640px) {
+  input,
+  select,
+  textarea,
+  button {
+    @apply min-h-[2.75rem];
+  }
+}
+
+/* Smooth transitions for interactive elements */
+button,
+a,
+input,
+select,
+textarea {
+  @apply transition-colors duration-200;
+}
+
+/* Improve scrollbar appearance */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(229, 231, 235, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(229, 231, 235, 0.5);
 }
