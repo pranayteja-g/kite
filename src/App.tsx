@@ -11,6 +11,7 @@ import { Transactions } from './pages/Transactions';
 import { Debts } from './pages/Debts';
 import { DebtDetail } from './pages/DebtDetail';
 import { Budgets } from './pages/Budgets';
+import { ManageTypes } from './pages/ManageTypes';
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ export default function App() {
               <Route path="debts" element={<Debts />} />
               <Route path="debts/:id" element={<DebtDetail />} />
               <Route path="budgets" element={<Budgets />} />
+              <Route path="manage-types" element={<ManageTypes />} />
             </Route>
           </Routes>
         </BrowserRouter>

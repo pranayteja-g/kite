@@ -1,13 +1,15 @@
 import { supabase } from '../supabaseClient';
 import type { Debt, DebtDirection, DebtStatus } from '../../types/database';
 
+const SELECT = '*, debt_type:debt_types(id,name)';
+
 export async function fetchDebts(): Promise<Debt[]> {
   const { data, error } = await supabase
     .from('debts')
-    .select('*')
+    .select(SELECT)
     .order('created_at', { ascending: false });
   if (error) throw error;
-  return data as Debt[];
+  return data as unknown as Debt[];
 }
 
 export interface CreateDebtInput {
@@ -16,7 +18,7 @@ export interface CreateDebtInput {
   email?: string;
   relationship?: string;
   direction: DebtDirection;
-  debt_type: string;
+  debt_type_id: string;
   original_amount: number;
   interest_rate?: number;
   start_date: string;
@@ -33,16 +35,12 @@ export async function createDebt(input: CreateDebtInput): Promise<Debt> {
 
   const { data, error } = await supabase
     .from('debts')
-    .insert({
-      user_id: userData.user.id,
-      ...input,
-      current_balance: input.original_amount,
-    })
-    .select()
+    .insert({ user_id: userData.user.id, ...input, current_balance: input.original_amount })
+    .select(SELECT)
     .single();
 
   if (error) throw error;
-  return data as Debt;
+  return data as unknown as Debt;
 }
 
 export async function updateDebtStatus(id: string, status: DebtStatus): Promise<void> {

@@ -7,6 +7,7 @@ const NAV_ITEMS = [
   { to: '/accounts', label: 'Accounts' },
   { to: '/debts', label: 'Debts' },
   { to: '/budgets', label: 'Budgets' },
+  { to: '/manage-types', label: 'Manage Types' },
 ];
 
 export function Layout() {
@@ -33,10 +34,9 @@ export function Layout() {
               to={item.to}
               end={item.to === '/'}
               className={({ isActive }) =>
-                `block rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                  isActive
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-neutral-400 hover:bg-neutral-900 hover:text-neutral-100'
+                `block rounded-lg px-3 py-2 text-sm font-medium transition-colors ${isActive
+                  ? 'bg-indigo-600 text-white'
+                  : 'text-neutral-400 hover:bg-neutral-900 hover:text-neutral-100'
                 }`
               }
             >

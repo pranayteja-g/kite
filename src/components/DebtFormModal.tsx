@@ -2,18 +2,17 @@ import { useState } from 'react';
 import { Modal } from './Modal';
 import { useCreateDebt } from '../hooks/useDebts';
 import type { DebtDirection } from '../types/database';
+import { useDebtTypes } from '../hooks/useDebtTypes';
 
-const DEBT_TYPES = [
-  'friend', 'family', 'credit_card', 'personal_loan', 'mortgage',
-  'vehicle_loan', 'education_loan', 'business_loan', 'other',
-];
+
 
 export function DebtFormModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const createDebt = useCreateDebt();
+  const { data: debtTypes } = useDebtTypes();
 
   const [personName, setPersonName] = useState('');
   const [direction, setDirection] = useState<DebtDirection>('owed_by_me');
-  const [debtType, setDebtType] = useState('personal');
+  const [debtTypeId, setDebtTypeId] = useState('');
   const [originalAmount, setOriginalAmount] = useState('');
   const [interestRate, setInterestRate] = useState('0');
   const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 10));
@@ -25,7 +24,7 @@ export function DebtFormModal({ open, onClose }: { open: boolean; onClose: () =>
   const reset = () => {
     setPersonName('');
     setDirection('owed_by_me');
-    setDebtType('personal');
+    setDebtTypeId('');
     setOriginalAmount('');
     setInterestRate('0');
     setStartDate(new Date().toISOString().slice(0, 10));
@@ -40,19 +39,26 @@ export function DebtFormModal({ open, onClose }: { open: boolean; onClose: () =>
     onClose();
   };
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    if (!debtTypeId) {
+      setError('Please select a debt type.');
+      return;
+    }
     try {
       await createDebt.mutateAsync({
         person_name: personName,
         direction,
-        debt_type: debtType,
+        debt_type_id: debtTypeId,
         original_amount: Number(originalAmount),
         interest_rate: Number(interestRate) || 0,
         start_date: startDate,
         due_date: dueDate || undefined,
-        monthly_installment: monthlyInstallment ? Number(monthlyInstallment) : undefined,
+        monthly_installment: monthlyInstallment
+          ? Number(monthlyInstallment)
+          : undefined,
         notes: notes || undefined,
       });
       handleClose();
@@ -68,22 +74,20 @@ export function DebtFormModal({ open, onClose }: { open: boolean; onClose: () =>
           <button
             type="button"
             onClick={() => setDirection('owed_by_me')}
-            className={`flex-1 rounded-lg py-2 text-sm font-medium ${
-              direction === 'owed_by_me'
-                ? 'bg-red-600 text-white'
-                : 'border border-neutral-700 text-neutral-400 hover:bg-neutral-900'
-            }`}
+            className={`flex-1 rounded-lg py-2 text-sm font-medium ${direction === 'owed_by_me'
+              ? 'bg-red-600 text-white'
+              : 'border border-neutral-700 text-neutral-400 hover:bg-neutral-900'
+              }`}
           >
             I owe them
           </button>
           <button
             type="button"
             onClick={() => setDirection('owed_to_me')}
-            className={`flex-1 rounded-lg py-2 text-sm font-medium ${
-              direction === 'owed_to_me'
-                ? 'bg-emerald-600 text-white'
-                : 'border border-neutral-700 text-neutral-400 hover:bg-neutral-900'
-            }`}
+            className={`flex-1 rounded-lg py-2 text-sm font-medium ${direction === 'owed_to_me'
+              ? 'bg-emerald-600 text-white'
+              : 'border border-neutral-700 text-neutral-400 hover:bg-neutral-900'
+              }`}
           >
             They owe me
           </button>
@@ -103,12 +107,17 @@ export function DebtFormModal({ open, onClose }: { open: boolean; onClose: () =>
         <div>
           <label className="mb-1 block text-xs font-medium text-neutral-400">Type</label>
           <select
-            value={debtType}
-            onChange={(e) => setDebtType(e.target.value)}
+            value={debtTypeId}
+            onChange={(e) => setDebtTypeId(e.target.value)}
+            required
             className="w-full rounded-lg border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm text-neutral-100 outline-none focus:ring-2 focus:ring-indigo-500"
           >
-            {DEBT_TYPES.map((t) => (
-              <option key={t} value={t}>{t.replace('_', ' ')}</option>
+            <option value="">Select type</option>
+
+            {debtTypes?.map((type) => (
+              <option key={type.id} value={type.id}>
+                {type.name}
+              </option>
             ))}
           </select>
         </div>

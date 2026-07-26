@@ -1,9 +1,7 @@
-import type { AccountType } from '../types/database';
+import type { Account } from '../types/database';
 
-const LIABILITY_TYPES: AccountType[] = ['credit_card'];
-
-export function isLiabilityAccount(type: AccountType): boolean {
-  return LIABILITY_TYPES.includes(type);
+export function isLiabilityAccount(account: Pick<Account, 'account_type'>): boolean {
+  return account.account_type?.kind === 'liability';
 }
 
 export function formatCurrency(amount: number, currency = 'INR'): string {
