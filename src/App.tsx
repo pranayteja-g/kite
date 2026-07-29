@@ -21,38 +21,32 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Layout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<Dashboard />} />
-              <Route path="transactions" element={<Transactions />} />
-              <Route path="accounts" element={<Accounts />} />
-              <Route path="debts" element={<Debts />} />
-              <Route path="debts/:id" element={<DebtDetail />} />
-              <Route path="budgets" element={<Budgets />} />
-              <Route path="manage-types" element={<ManageTypes />} />
-            </Route>
-            <Route path="/" 
-              element={
-                <ProtectedRoute>
-                  <CurrencyProvider>
+        <CurrencyProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
                     <Layout />
-                  </CurrencyProvider>
-                </ProtectedRoute>
-              }
-            ></Route>
-            <Route path="settings" element={<Settings />} />
-          </Routes>
-        </BrowserRouter>
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<Dashboard />} />
+                <Route path="transactions" element={<Transactions />} />
+                <Route path="accounts" element={<Accounts />} />
+                <Route path="debts" element={<Debts />} />
+                <Route path="debts/:id" element={<DebtDetail />} />
+                <Route path="budgets" element={<Budgets />} />
+                <Route path="manage-types" element={<ManageTypes />} />
+                <Route path="settings" element={<Settings />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </CurrencyProvider>
       </AuthProvider>
     </QueryClientProvider>
   );
