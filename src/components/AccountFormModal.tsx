@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Modal } from './Modal';
 import { useCreateAccount } from '../hooks/useAccounts';
 import { useAccountTypes } from '../hooks/useAccountTypes';
+import { useCurrency } from '../context/CurrencyContext';
 
 export function AccountFormModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const createAccount = useCreateAccount();
@@ -10,6 +11,7 @@ export function AccountFormModal({ open, onClose }: { open: boolean; onClose: ()
   const [accountTypeId, setAccountTypeId] = useState('');
   const [openingBalance, setOpeningBalance] = useState('0');
   const [error, setError] = useState<string | null>(null);
+  const { currency } = useCurrency();
 
   const reset = () => {
     setName('');
@@ -30,7 +32,7 @@ export function AccountFormModal({ open, onClose }: { open: boolean; onClose: ()
       await createAccount.mutateAsync({
         name,
         account_type_id: accountTypeId,
-        currency: 'INR',
+        currency: currency,
         opening_balance: Number(openingBalance) || 0,
         color: '#6366f1',
       });

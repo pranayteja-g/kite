@@ -4,12 +4,14 @@ import { useDebts } from '../hooks/useDebts';
 import { DebtFormModal } from '../components/DebtFormModal';
 import { DebtProgressBar } from '../components/DebtProgressBar';
 import { StatCard } from '../components/StatCard';
-import { formatCurrency, formatDate } from '../lib/format';
+import { formatDate } from '../lib/format';
+import { useCurrency } from '../context/CurrencyContext';
 
 export function Debts() {
   const { data: debts, isLoading, error } = useDebts();
   const [modalOpen, setModalOpen] = useState(false);
   const [tab, setTab] = useState<'owed_by_me' | 'owed_to_me'>('owed_by_me');
+  const { formatCurrency } = useCurrency();
 
   const { totalIOwe, totalOwedToMe } = useMemo(() => {
     let iOwe = 0;

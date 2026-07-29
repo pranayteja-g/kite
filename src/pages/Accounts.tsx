@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useAccounts, useDeleteAccount } from '../hooks/useAccounts';
 import { AccountFormModal } from '../components/AccountFormModal';
-import { formatCurrency, isLiabilityAccount } from '../lib/format';
+import { isLiabilityAccount } from '../lib/format';
+import { useCurrency } from '../context/CurrencyContext';
 
 export function Accounts() {
   const { data: accounts, isLoading, error } = useAccounts();
   const deleteAccount = useDeleteAccount();
   const [modalOpen, setModalOpen] = useState(false);
+  const { formatCurrency } = useCurrency();
 
   return (
     <div className="p-3 sm:p-6 lg:p-8 bg-gradient-to-b from-neutral-950 to-neutral-900/50">

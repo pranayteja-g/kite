@@ -4,7 +4,8 @@ import { useDebts, useUpdateDebtStatus, useDeleteDebt } from '../hooks/useDebts'
 import { useDebtPayments, useDeleteDebtPayment } from '../hooks/useDebtPayments';
 import { DebtPaymentFormModal } from '../components/DebtPaymentFormModal';
 import { DebtProgressBar } from '../components/DebtProgressBar';
-import { formatCurrency, formatDate } from '../lib/format';
+import { formatDate } from '../lib/format';
+import { useCurrency } from '../context/CurrencyContext';
 
 export function DebtDetail() {
   const { id } = useParams<{ id: string }>();
@@ -15,6 +16,7 @@ export function DebtDetail() {
   const deleteDebt = useDeleteDebt();
   const deletePayment = useDeleteDebtPayment();
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const { formatCurrency } = useCurrency();
 
   const debt = debts?.find((d) => d.id === id);
 

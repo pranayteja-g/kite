@@ -3,7 +3,8 @@ import { useAccounts } from '../hooks/useAccounts';
 import { useTransactions } from '../hooks/useTransactions';
 import { StatCard } from '../components/StatCard';
 import { useDebts } from '../hooks/useDebts';
-import { formatCurrency, formatDate, isLiabilityAccount } from '../lib/format';
+import { formatDate, isLiabilityAccount } from '../lib/format';
+import { useCurrency } from '../context/CurrencyContext';
 
 function startOfMonthISO(): string {
   const d = new Date();
@@ -14,6 +15,7 @@ export function Dashboard() {
   const { data: accounts } = useAccounts();
   const { data: monthTransactions } = useTransactions({ startDate: startOfMonthISO() });
   const { data: recentTransactions } = useTransactions();
+  const { formatCurrency } = useCurrency();
 
   const { totalAssets, totalLiabilities, netWorth } = useMemo(() => {
     let assets = 0;
