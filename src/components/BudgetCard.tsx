@@ -1,13 +1,13 @@
 import { useTransactions } from '../hooks/useTransactions';
 import { useDeleteBudget } from '../hooks/useBudgets';
 import { currentPeriodRange } from '../lib/budgetPeriod';
-import { formatCurrency } from '../lib/format';
+import { useCurrency } from '../context/CurrencyContext';
 import type { Budget } from '../types/database';
 
 export function BudgetCard({ budget }: { budget: Budget }) {
   const { start, end } = currentPeriodRange(budget.period);
   const deleteBudget = useDeleteBudget();
-
+  const { currency, formatCurrency } = useCurrency();
   const { data: transactions } = useTransactions({
     categoryId: budget.category_id ?? undefined,
     type: 'expense',
