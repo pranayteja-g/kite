@@ -8,4 +8,5 @@ export const SUPPORTED_CURRENCIES = [
   { code: 'AUD', label: 'Australian Dollar (A$)' },
   { code: 'CAD', label: 'Canadian Dollar (C$)' },
   { code: 'JPY', label: 'Japanese Yen (¥)' },
+  { code: 'PHP', label: 'Philippine peso (₱)' },
 ];
