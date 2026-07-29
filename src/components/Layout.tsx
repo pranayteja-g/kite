@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { to: '/debts', label: 'Debts' },
   { to: '/budgets', label: 'Budgets' },
   { to: '/manage-types', label: 'Manage Types' },
+  { to: '/settings', label: 'Settings' },
 ];
 
 export function Layout() {
@@ -36,9 +37,8 @@ export function Layout() {
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-60 border-r border-neutral-800 bg-neutral-950 p-6 flex flex-col transform transition-transform duration-300 lg:static lg:translate-x-0 ${
-        mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-      }`}>
+      <aside className={`fixed inset-y-0 left-0 z-50 w-60 border-r border-neutral-800 bg-neutral-950 p-6 flex flex-col transform transition-transform duration-300 lg:static lg:translate-x-0 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}>
         <Link to="/" className="mb-8 block" onClick={handleNavClick}>
           <h1 className="text-xl font-semibold tracking-tight hover:text-indigo-400">Kite</h1>
           <p className="text-xs text-neutral-500">Financial freedom and growth</p>

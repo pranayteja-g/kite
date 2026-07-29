@@ -12,6 +12,8 @@ import { Debts } from './pages/Debts';
 import { DebtDetail } from './pages/DebtDetail';
 import { Budgets } from './pages/Budgets';
 import { ManageTypes } from './pages/ManageTypes';
+import { CurrencyProvider } from './context/CurrencyContext';
+import { Settings } from './pages/Settings';
 
 const queryClient = new QueryClient();
 
@@ -39,6 +41,16 @@ export default function App() {
               <Route path="budgets" element={<Budgets />} />
               <Route path="manage-types" element={<ManageTypes />} />
             </Route>
+            <Route path="/" 
+              element={
+                <ProtectedRoute>
+                  <CurrencyProvider>
+                    <Layout />
+                  </CurrencyProvider>
+                </ProtectedRoute>
+              }
+            ></Route>
+            <Route path="settings" element={<Settings />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

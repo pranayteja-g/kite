@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useTransactions, useDeleteTransaction } from '../hooks/useTransactions';
 import { TransactionFormModal } from '../components/TransactionFormModal';
-import { formatCurrency, formatDate } from '../lib/format';
+import { formatDate } from '../lib/format';
 import type { TransactionType } from '../types/database';
+import { useCurrency } from '../context/CurrencyContext';
 
 export function Transactions() {
   const [search, setSearch] = useState('');
@@ -14,6 +15,7 @@ export function Transactions() {
     type: typeFilter || undefined,
   });
   const deleteTransaction = useDeleteTransaction();
+  const { formatCurrency } = useCurrency();
 
   return (
     <div className="p-3 sm:p-6 lg:p-8 bg-gradient-to-b from-neutral-950 to-neutral-900/50">
