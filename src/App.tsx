@@ -14,6 +14,8 @@ import { Budgets } from './pages/Budgets';
 import { ManageTypes } from './pages/ManageTypes';
 import { CurrencyProvider } from './context/CurrencyContext';
 import { Settings } from './pages/Settings';
+import { Goals } from './pages/Goals';
+import { MonthlySummary } from './pages/MonthlySummary';
 
 const queryClient = new QueryClient();
 
@@ -43,6 +45,8 @@ export default function App() {
                 <Route path="budgets" element={<Budgets />} />
                 <Route path="manage-types" element={<ManageTypes />} />
                 <Route path="settings" element={<Settings />} />
+                <Route path="goals" element={<Goals />} />
+                <Route path="monthly-summary" element={<MonthlySummary />} />
               </Route>
             </Routes>
           </BrowserRouter>

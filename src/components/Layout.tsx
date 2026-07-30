@@ -9,6 +9,8 @@ const NAV_ITEMS = [
   { to: '/debts', label: 'Debts' },
   { to: '/budgets', label: 'Budgets' },
   { to: '/manage-types', label: 'Manage Types' },
+  { to: '/goals', label: 'Goals' },
+  { to: '/monthly-summary', label: 'Monthly Summary' },
   { to: '/settings', label: 'Settings' },
 ];
 
