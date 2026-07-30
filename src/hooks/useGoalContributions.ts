@@ -27,7 +27,7 @@ export function useCreateGoalContribution() {
 export function useDeleteGoalContribution() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, goalId }: { id: string; goalId: string }) => deleteGoalContribution(id),
+    mutationFn: (variables: { id: string; goalId: string }) => deleteGoalContribution(variables.id),
     onSuccess: (_data, variables) => {
       qc.invalidateQueries({ queryKey: ['goalContributions', variables.goalId] });
       qc.invalidateQueries({ queryKey: ['goals'] });
