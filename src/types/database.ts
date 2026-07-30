@@ -1,6 +1,7 @@
 export type CategoryKind = 'income' | 'expense';
 export type TransactionType = 'income' | 'expense' | 'transfer';
 export type AccountKind = 'asset' | 'liability';
+export type GoalPriority = 'low' | 'medium' | 'high';
 
 export interface AccountType {
   id: string;
@@ -110,6 +111,27 @@ export interface DebtPayment {
   principal: number | null;
   interest: number | null;
   payment_date: string;
+  notes: string | null;
+  created_at: string;
+}
+
+export interface Goal {
+  id: string;
+  user_id: string;
+  name: string;
+  target_amount: number;
+  current_amount: number;
+  deadline: string | null;
+  priority: GoalPriority;
+  created_at: string;
+}
+
+export interface GoalContribution {
+  id: string;
+  goal_id: string;
+  user_id: string;
+  amount: number;
+  contributed_at: string;
   notes: string | null;
   created_at: string;
 }

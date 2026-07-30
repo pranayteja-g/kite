@@ -34,3 +34,14 @@ export function useDeleteTransaction() {
     },
   });
 }
+
+export function useDuplicateTransaction() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (tx: Parameters<typeof createTransaction>[0]) => createTransaction(tx),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['transactions'] });
+      qc.invalidateQueries({ queryKey: ['accounts'] });
+    },
+  });
+}

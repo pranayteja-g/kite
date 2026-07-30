@@ -5,10 +5,12 @@ import { useCategories } from '../hooks/useCategories';
 import { useCreateTransaction } from '../hooks/useTransactions';
 import type { TransactionType } from '../types/database';
 
+
 export function TransactionFormModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { data: accounts } = useAccounts();
   const { data: categories } = useCategories();
   const createTransaction = useCreateTransaction();
+  const [tagsInput, setTagsInput] = useState('');
 
   const [type, setType] = useState<TransactionType>('expense');
   const [amount, setAmount] = useState('');
@@ -20,6 +22,7 @@ export function TransactionFormModal({ open, onClose }: { open: boolean; onClose
   const [error, setError] = useState<string | null>(null);
 
   const relevantCategories = categories?.filter((c) => c.kind === type) ?? [];
+  const tags = tagsInput.split(',').map((t) => t.trim()).filter(Boolean);
 
   const reset = () => {
     setType('expense');
@@ -30,6 +33,7 @@ export function TransactionFormModal({ open, onClose }: { open: boolean; onClose
     setMerchant('');
     setOccurredAt(new Date().toISOString().slice(0, 10));
     setError(null);
+    setTagsInput('');
   };
 
   const handleClose = () => {
@@ -54,6 +58,7 @@ export function TransactionFormModal({ open, onClose }: { open: boolean; onClose
         to_account_id: type === 'transfer' ? toAccountId : null,
         category_id: type === 'transfer' ? null : categoryId || null,
         merchant: merchant || undefined,
+        tags,
         occurred_at: occurredAt,
       });
       handleClose();
@@ -71,11 +76,10 @@ export function TransactionFormModal({ open, onClose }: { open: boolean; onClose
               key={t}
               type="button"
               onClick={() => setType(t)}
-              className={`flex-1 rounded-lg py-2 text-sm font-medium capitalize ${
-                type === t
-                  ? 'bg-indigo-600 text-white'
-                  : 'border border-neutral-700 text-neutral-400 hover:bg-neutral-900'
-              }`}
+              className={`flex-1 rounded-lg py-2 text-sm font-medium capitalize ${type === t
+                ? 'bg-indigo-600 text-white'
+                : 'border border-neutral-700 text-neutral-400 hover:bg-neutral-900'
+                }`}
             >
               {t}
             </button>
@@ -151,6 +155,17 @@ export function TransactionFormModal({ open, onClose }: { open: boolean; onClose
               value={merchant}
               onChange={(e) => setMerchant(e.target.value)}
               placeholder="e.g. Swiggy, Landlord, Amazon"
+              className="w-full rounded-lg border border-neutral-700 bg-transparent px-3 py-2 text-sm text-neutral-100 placeholder:text-neutral-500 outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+        )}
+        {type !== 'transfer' && (
+          <div>
+            <label className="mb-1 block text-xs font-medium text-neutral-400">Tags (comma separated)</label>
+            <input
+              value={tagsInput}
+              onChange={(e) => setTagsInput(e.target.value)}
+              placeholder="e.g. travel, tax-deductible"
               className="w-full rounded-lg border border-neutral-700 bg-transparent px-3 py-2 text-sm text-neutral-100 placeholder:text-neutral-500 outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>

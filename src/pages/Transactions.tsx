@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { useTransactions, useDeleteTransaction } from '../hooks/useTransactions';
+import { useTransactions, useDeleteTransaction, useDuplicateTransaction } from '../hooks/useTransactions';
 import { TransactionFormModal } from '../components/TransactionFormModal';
 import { formatDate } from '../lib/format';
-import type { TransactionType } from '../types/database';
+import type { Transaction, TransactionType } from '../types/database';
 import { useCurrency } from '../context/CurrencyContext';
+import { transactionsToCsv, downloadCsv } from '../lib/csvExport';
 
 export function Transactions() {
   const [search, setSearch] = useState('');
@@ -15,7 +16,27 @@ export function Transactions() {
     type: typeFilter || undefined,
   });
   const deleteTransaction = useDeleteTransaction();
+  const duplicateTransaction = useDuplicateTransaction();
   const { formatCurrency } = useCurrency();
+
+  const handleDuplicate = (tx: Transaction) => {
+    duplicateTransaction.mutate({
+      type: tx.type,
+      amount: tx.amount,
+      account_id: tx.account_id,
+      to_account_id: tx.to_account_id,
+      category_id: tx.category_id,
+      merchant: tx.merchant ?? undefined,
+      tags: tx.tags,
+      occurred_at: new Date().toISOString().slice(0, 10),
+    });
+  };
+
+  const handleExport = () => {
+    if (!transactions || transactions.length === 0) return;
+    const csv = transactionsToCsv(transactions);
+    downloadCsv(csv, `kite-transactions-${new Date().toISOString().slice(0, 10)}.csv`);
+  };
 
   return (
     <div className="p-3 sm:p-6 lg:p-8 bg-gradient-to-b from-neutral-950 to-neutral-900/50">
@@ -24,12 +45,20 @@ export function Transactions() {
           <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-400 to-indigo-600 bg-clip-text text-transparent">Transactions</h1>
           <p className="text-sm text-neutral-400 mt-2 font-medium">Every money movement in one place</p>
         </div>
-        <button
-          onClick={() => setModalOpen(true)}
-          className="rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 px-5 py-2.5 text-sm font-bold text-white transition-all duration-200 shadow-lg hover:shadow-indigo-500/20 w-full sm:w-auto whitespace-nowrap"
-        >
-          + New transaction
-        </button>
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <button
+            onClick={handleExport}
+            className="rounded-lg border border-neutral-700 px-4 py-2.5 text-sm font-medium text-neutral-300 hover:bg-neutral-900 whitespace-nowrap"
+          >
+            Export CSV
+          </button>
+          <button
+            onClick={() => setModalOpen(true)}
+            className="rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 px-5 py-2.5 text-sm font-bold text-white transition-all duration-200 shadow-lg hover:shadow-indigo-500/20 whitespace-nowrap"
+          >
+            + New transaction
+          </button>
+        </div>
       </div>
 
       <div className="mb-6 flex flex-col sm:flex-row gap-3">
@@ -85,12 +114,21 @@ export function Transactions() {
                     {formatDate(tx.occurred_at)} • {tx.account?.name}
                     {tx.type === 'transfer' && tx.to_account ? ` → ${tx.to_account.name}` : ''}
                   </p>
+                  {tx.tags && tx.tags.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {tx.tags.map((tag) => (
+                        <span key={tag} className="rounded-full bg-neutral-800 px-2 py-0.5 text-[10px] text-neutral-400">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 
               <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 sm:gap-4 flex-shrink-0">
                 <p
-                  className={`text-base sm:text-lg font-bold ${
+                  className={`text-base sm:text-lg font-bold whitespace-nowrap ${
                     tx.type === 'income'
                       ? 'text-emerald-400'
                       : tx.type === 'expense'
@@ -101,14 +139,22 @@ export function Transactions() {
                   {tx.type === 'expense' ? '−' : tx.type === 'income' ? '+' : ''}
                   {formatCurrency(tx.amount)}
                 </p>
-                <button
-                  onClick={() => {
-                    if (confirm('Delete this transaction?')) deleteTransaction.mutate(tx.id);
-                  }}
-                  className="text-xs text-neutral-600 hover:text-red-400 whitespace-nowrap"
-                >
-                  Delete
-                </button>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => handleDuplicate(tx)}
+                    className="text-xs text-neutral-600 hover:text-indigo-400 whitespace-nowrap"
+                  >
+                    Duplicate
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (confirm('Delete this transaction?')) deleteTransaction.mutate(tx.id);
+                    }}
+                    className="text-xs text-neutral-600 hover:text-red-400 whitespace-nowrap"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
           </div>
